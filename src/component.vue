@@ -31,10 +31,6 @@
   * handle deletion of maskedChars => if (start !== end) and only masked chars got deleted block if (start === end) and only masked chars got deleted jump to next char that is not part of mask (keyDown & keyPress)
   ** onlyMaskedCharGotDeleted is already used for backspace. use it for delete and keyPress!
   ** currently no distinction between start !== end and start === end
-  * 
-  * outsource the formater so it can be used to get the formatted text/float/int as string (check if the original support a similar functionality)
-  * 
-  * Try to use filters
 */
 import { clearValue, prepareMask } from './utils/preparator'
 import { formatText, formatFloat } from './utils/formatter'
