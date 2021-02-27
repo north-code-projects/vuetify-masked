@@ -1,0 +1,17 @@
+{
+  "name": "vuetify-masked",
+  "description": "vuetify masked textfield and filter",
+  "version": "0.0.1",
+  "author": "Kim Mannstedt <k.mannstedt+dev@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "vue", "vuetify", "mask", "masked", "filter", "textfield", "v-text-field", "v-text-field-masked"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/north-code-projects/vuetify-masked"
+  },
+  "homepage": "https://github.com/north-code-projects/vuetify-masked#readme",
+  "bugs": "https://github.com/north-code-projects/vuetify-masked/issues",
+  "main": "src/index.js"
+}
