@@ -319,7 +319,8 @@ export default {
     },
     deformat: function(value) {
       if(value && this.typeIsText) {
-        value = formatText(value, this.cmpFormatMask, this.cmpMaskCharacter, this.falseCharWildcard)
+        value = formatText(value, this.cmpDeformatMask, this.cmpMaskCharacter, this.falseCharWildcard)
+        console.log(value)
         if(value === '') {
           value = this.empty
         }
