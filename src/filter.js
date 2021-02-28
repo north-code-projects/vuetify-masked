@@ -9,7 +9,6 @@ let globalOptions = {
   empty: null,
   precision: 2,
   locale: 'en-EN',
-  length: null,
   suffix: null,
   falseCharWildcard: ''
 }
@@ -61,13 +60,17 @@ function cmpMaskCharacter() {
   return v
 }
 
-export default (value, options) => {
-  /*
-    TODO
-    * assign default options to options
-    * format the value with the correct options
-  */
+function cmpSuffix() {
+  if(globalOptions.type === 'percentage') {
+    return globalOptions.suffix || '%'
+  } else if(globalOptions.type === 'currency') {
+    return globalOptions.suffix || 'USD'
+  } else {
+    return globalOptions.suffix || ''
+  }
+}
 
+export default (value, options) => {
   globalOptions = Object.assign(globalOptions, options)
 
   let result = globalOptions.empty
@@ -78,5 +81,5 @@ export default (value, options) => {
     result = formatFloat(value, globalOptions.locale, globalOptions.precision)
   }
 
-  return result
+  return result + cmpSuffix()
 }

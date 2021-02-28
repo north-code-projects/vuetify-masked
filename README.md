@@ -47,6 +47,7 @@ Once installed, for a simple mask the component can be used in a template as sim
 <!-- Filter -->
 {{ text | vuetifyMaskedFilter({ formatMask: "ADDD-ul/#####" }) }}
 ```
+Resulted value for '123A56U89a' is '123A/56u/89A'.
 
 ### Type 'float'
 ```javascript
@@ -60,6 +61,7 @@ Once installed, for a simple mask the component can be used in a template as sim
 <!-- Filter -->
 {{ text | vuetifyMaskedFilter({ type:"float" }) }}
 ```
+Resulted value for '1234567890' is '1,234,567,890.00'
 
 ### Type 'integer'
 ```javascript
@@ -73,6 +75,7 @@ Once installed, for a simple mask the component can be used in a template as sim
 <!-- Filter -->
 {{ text | vuetifyMaskedFilter({ type:"integer" }) }}
 ```
+Resulted value for '1234567890' is '1,234,567,890'
 
 ### Type 'currency'
 ```javascript
@@ -86,6 +89,7 @@ Once installed, for a simple mask the component can be used in a template as sim
 <!-- Filter -->
 {{ text | vuetifyMaskedFilter({ type:"currency" }) }}
 ```
+Resulted value for '1234567890' is '1,234,567,890.00USD'
 
 ### Type 'percentage'
 ```javascript
@@ -99,24 +103,26 @@ Once installed, for a simple mask the component can be used in a template as sim
 <!-- Filter -->
 {{ text | vuetifyMaskedFilter({ type:"percentage" }) }}
 ```
+Resulted value for '1234567890' is '1,234,567,890.00%'
 
 ## Options (Component Props and Filter Parameters
 The following options can be used for component and filter
 |Option        |Type           |Default           |Component  |Filter |Description |
 |:-------------|:---           |:-----------------|:----------|:------|:-----------|
-|v-model       |string, number |``null``          |yes        |no     |            |
-|value         |string, number |``null``          |yes        |yes    |Mapped to the v-model of the component|            |
-|formatMask    |string, object |``'##########'``  |yes        |no     |Used to mask the given value. Meaining of characters and usable aatributes for obecjt can be foudn below table|
 |deformatMask  |string, object |``null``          |yes        |no     |Mask used to deformat the masked value. If null all characters of the masked will be removed |
-|type          |string         |``'text'``        |yes        |yes    |5 types exist: text, float, integer, currency, and percentage |
-|maskCharacter |array          |``['-', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']``|yes|no|Characters of the mask. Can not be used as input character for the text field. Used for both, formatMask and deformatMask.|
 |empty         |string         |``null``          |yes        |no     |Value returned for an empty text field|
-|precision     |number         |``2``             |yes        |yes    |Precision used for numbers. Ingored for types text and integer.|
-|length        |number         |``null``          |yes        |no     |Max number of digits (including precision) that can be entered into the text field. Ignored for type text.|
-|suffix        |string         |``null`` (text, integer, float)<br/>``'%'`` (percentage)<br/>``'USD'``(currency)|yes|yes||
 |falseCharWildcard|string      |``''``            |yes        |yes    |False characters of the provided  v-model/value will be replaced with this one. By default they will simply be deleted.|
+|formatMask    |string, object |``'##########'``  |yes        |yes    |Used to mask the given value. Meaining of characters and usable aatributes for obecjt can be foudn below table|
 |hints         |object         ||yes|no| Hints will be displayed depending on the cursor position and according to the next possible character that can be entered. |
-|properties    |object         |``null``|Properties for the v-text-field used by vuetify-masked|
+|length        |number         |``null``          |yes        |no     |Max number of digits (including precision) that can be entered into the text field. Ignored for type text.|
+|locale        |string         |``'en-EN'``       |yes        |yes    |Used to determine the decimal and thousands seperator. |
+|maskCharacter |array          |``['-', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']``|yes|no|Characters of the mask. Can not be used as input character for the text field. Used for both, formatMask and deformatMask.|
+|precision     |number         |``2``             |yes        |yes    |Precision used for numbers. Ingored for types text and integer.|
+|properties    |object         |``null``          |yes        |no     |Properties for the v-text-field used by vuetify-masked|
+|suffix        |string         |``null`` (text, integer, float)<br/>``'%'`` (percentage)<br/>``'USD'``(currency)|yes|yes||
+|type          |string         |``'text'``        |yes        |yes    |5 types exist: text, float, integer, currency, and percentage |
+|value         |string, number |``null``          |yes        |yes    |Mapped to the v-model of the component|            |
+|v-model       |string, number |``null``          |yes        |no     |            |
 
 ### Predefined Mask Characters
 |Character|Description|
