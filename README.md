@@ -21,7 +21,7 @@ Vue.use(VuetifyMasked)
 import { VuetifyMaskedComponent } from 'vuetify-masked'
 
 // use only the filter
-import { VuetifyMaskedComponent } from 'vuetify-masked'
+import { VuetifyMaskedFilter } from 'vuetify-masked'
 
 export default {
   components: {
@@ -105,7 +105,7 @@ Resulted value for '1234567890' is '1,234,567,890.00USD'
 ```
 Resulted value for '1234567890' is '1,234,567,890.00%'
 
-## Options (Component Props and Filter Parameters
+## Options (Component Props and Filter Parameters)
 The following options can be used for component and filter
 |Option        |Type           |Default           |Component  |Filter |Description |
 |:-------------|:---           |:-----------------|:----------|:------|:-----------|
