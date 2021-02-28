@@ -1,7 +1,7 @@
 {
   "name": "vuetify-masked",
   "description": "vuetify masked textfield and filter",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Kim Mannstedt <k.mannstedt+dev@gmail.com>",
   "license": "MIT",
   "keywords": [
