@@ -64,11 +64,11 @@ The following options can be used for component and filter
 |empty         |string         |``null``          |yes        |no     |Value returned for an empty text field|
 |precision     |number         |``2``             |yes        |yes    |Precision used for numbers. Ingored for types text and integer.|
 |length        |number         |``null``          |yes        |no     |Max number of digits (including precision) that can be entered into the text field. Ignored for Type text.|
-|suffix        |string         |``null`` (text, integer, float)<br/>``'%'`` (percentage)<br/>``'EUR'``(currency)|yes|yes||
-|falseCharWildcard|string      |``''``            |yes        |yes    |False characters of the provided  v-model/value will be replaced with this one. By default they will simply be deleted|
+|suffix        |string         |``null`` (text, integer, float)<br/>``'%'`` (percentage)<br/>``'USD'``(currency)|yes|yes||
+|falseCharWildcard|string      |``''``            |yes        |yes    |False characters of the provided  v-model/value will be replaced with this one. By default they will simply be deleted.|
 |hints         |object         |<code>{<br/>digit: 'The next char is a digit',<br/>alphabetic: 'The next char is alphabetic',<br/>lowerCase: 'The next char is lower case',<br/>upperCase: 'The next char is upper case',<br/>alphanumeric: 'The next char is alphanumeric',<br/>numeric: null,<br/>maxLength: 'Max number of characters reached'<br/>}</code>|yes|no| Hints will be displayed depending on the cursor position and according to the next possible character that can be entered. |
 
-## Predifind Mask Characters
+## Predefind Mask Characters
 |Character|Description|
 |---------|-----------|
 |``A``|Character is alphabetical|

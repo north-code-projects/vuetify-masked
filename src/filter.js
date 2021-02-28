@@ -70,8 +70,6 @@ export default (value, options) => {
 
   globalOptions = Object.assign(globalOptions, options)
 
-  console.log(globalOptions)
-
   let result = globalOptions.empty
 
   if(typeIsText()) {

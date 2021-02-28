@@ -280,7 +280,7 @@ export default {
       if(this.type === 'percentage') {
         return this.suffix || '%'
       } else if(this.type === 'currency') {
-        return this.suffix || 'EUR'
+        return this.suffix || 'USD'
       } else {
         return this.suffix
       }
@@ -316,7 +316,6 @@ export default {
     deformat: function(value) {
       if(value && this.typeIsText) {
         value = formatText(value, this.cmpDeformatMask, this.cmpMaskCharacter, this.falseCharWildcard)
-        console.log(value)
         if(value === '') {
           value = this.empty
         }
