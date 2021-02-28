@@ -57,6 +57,6 @@ The following options can be used for component and filter
 | Option        | type| Default           | Component  | Filter | Description |
 |:--------------|:---|:------------------|:-----------|:-------|:------------|
 | v-model     | string, integer| ``null``    | yes   | no       |             |
-| formatMask      |string, object| ##########       |  yes | no | The masked used to mask the given value |
+| formatMask      |string, object| ##########       |  yes | no | Used to mask the given value |
 | deformatMask |string, object| ``null``      |    yes | no | Mask used to deformat the masked value. If null all characters of the masked will be removed |
-| type |string| text | yes | yes | 5 types exists: text, float, integer, currency, and percentage |
+| type |string| text | yes | yes | 5 types exist: text, float, integer, currency, and percentage |
