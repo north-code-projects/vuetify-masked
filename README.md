@@ -2,6 +2,9 @@
 Create a masked text field for vuetify 2.x based on v-text-field. Supported are static masks provided by string/object and the masking of float and integer values.
 Additionally, a filter exists to format a value.
 
+## Demo
+[CodeSandbox Demo](https://codesandbox.io/s/vuetify-masked-demo-xq6bx?fontsize=14&hidenavigation=1&theme=dark&view=preview "CodeSandbox Demo")
+
 ## Install
 
 ```
