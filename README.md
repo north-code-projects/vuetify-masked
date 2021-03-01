@@ -53,7 +53,6 @@ Resulted value for '123A56U89a' is '123A/56u/89A'.
 ```javascript
 <v-text-field-masked
   v-model="text"
-  formatMask="###A/##l/D#U"
   label="float type"
   type="float"
 ></v-text-field-masked>
@@ -67,7 +66,6 @@ Resulted value for '1234567890' is '1,234,567,890.00'
 ```javascript
 <v-text-field-masked
   v-model="text"
-  formatMask="###A/##l/D#U"
   label="integer type"
   type="integer"
 ></v-text-field-masked>
@@ -81,7 +79,6 @@ Resulted value for '1234567890' is '1,234,567,890'
 ```javascript
 <v-text-field-masked
   v-model="text"
-  formatMask="###A/##l/D#U"
   label="currency type"
   type="currency"
 ></v-text-field-masked>
@@ -95,7 +92,6 @@ Resulted value for '1234567890' is '1,234,567,890.00USD'
 ```javascript
 <v-text-field-masked
   v-model="text"
-  formatMask="###A/##l/D#U"
   label="percentage type"
   type="percentage"
 ></v-text-field-masked>
