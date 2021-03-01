@@ -60,6 +60,14 @@ function cmpMaskCharacter() {
   return v
 }
 
+function cmpPrecision() {
+  if(globalOptions.type === 'integer') {
+    return 0
+  } else {
+    return globalOptions.precision
+  } 
+}
+
 function cmpSuffix() {
   if(globalOptions.type === 'percentage') {
     return globalOptions.suffix || '%'
@@ -78,7 +86,7 @@ export default (value, options) => {
   if(typeIsText()) {
     result = formatText(value, formatMask(), [], '')
   } else if (typeIsFloat()) {
-    result = formatFloat(value, globalOptions.locale, globalOptions.precision)
+    result = formatFloat(value, globalOptions.locale, cmpPrecision())
   }
 
   return result + cmpSuffix()
