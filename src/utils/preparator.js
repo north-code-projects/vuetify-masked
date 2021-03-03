@@ -69,12 +69,12 @@ export function prepareMask(maskChar, hints, maskCharacters) {
 
     o.mask = maskChar.mask
     o.replace = maskChar.hasOwnProperty('replace') ? maskChar.replace : false
-    o.partOfMask = maskCharacters.includes(maskChar)
+    o.partOfMask = maskCharacters.includes(maskChar.mask)
     o.toUpperCase = maskChar.hasOwnProperty('toUpperCase') ? maskChar.toUpperCase : maskChar.mask === 'U'
     o.toLowerCase = maskChar.hasOwnProperty('toLowerCase') ? maskChar.toLowerCase : maskChar.mask === 'l'
     o.onlyDigit = maskChar.hasOwnProperty('onlyDigit') ? maskChar.onlyDigit : maskChar.mask === 'D'
     o.onlyAlphabetical = maskChar.hasOwnProperty('onlyAlphabetical') ? maskChar.onlyAlphabetical : maskChar.mask === 'A'
-    o.hint = maskChar.hasOwnProperty('hint') ? maskChar.hint : hint
+    o.hint = maskChar.hasOwnProperty('hint') ? maskChar.hint.toString() : hint
   }
 
   return o

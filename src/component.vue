@@ -22,16 +22,6 @@
 </template>
 
 <script>
-/*
-  TODO
-  * ERRORS
-  * keyPress needs to check if max number of chars is already reached...
-  *
-  * FEATURES
-  * handle deletion of maskedChars => if (start !== end) and only masked chars got deleted block if (start === end) and only masked chars got deleted jump to next char that is not part of mask (keyDown & keyPress)
-  ** onlyMaskedCharGotDeleted is already used for backspace. use it for delete and keyPress!
-  ** currently no distinction between start !== end and start === end
-*/
 import { clearValue, prepareMask } from './utils/preparator'
 import { formatText, formatFloat } from './utils/formatter'
 import { deformatFloat } from './utils/deformatter'
@@ -369,7 +359,7 @@ export default {
       }
 
       this.selectionStart = cursor + (preventedDefault ? 0 : cnt + 1)
-      this.nextCharHint(cursor + (preventedDefault ? 0 : cnt + 1))
+      //this.nextCharHint(cursor + (preventedDefault ? 0 : cnt + 1))
       
       this.$emit('keypress')
     },
@@ -419,7 +409,7 @@ export default {
       let cmpValueCopy = this.cmpValue != null ? this.cmpValue.toString() : ''
       this.cmpValue = [cmpValueCopy.slice(0, cursor), paste, cmpValueCopy.slice(cursorEnd)].join('')
       this.selectionStart = cursor + cnt + paste.length
-      this.nextCharHint(cursor + cnt + paste.length)
+      //this.nextCharHint(cursor + cnt + paste.length)
       this.$emit('paste')
     },
     keyDown: function(evt) {
@@ -450,7 +440,24 @@ export default {
               this.selectionStart = cursorStart - 1 + cnt
             }
             
-            this.nextCharHint(this.selectionStart)
+            //this.nextCharHint(this.selectionStart)
+          } else if (this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart - 1 : cursorStart, cursorStart === cursorEnd ? cursorStart - 1 : cursorEnd - 1) && cursorStart === cursorEnd) {
+            let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
+            var deleteCharAt = -1
+
+            for(var i = cursorStart - 1; i >= 0; i--) {
+              if(!this.cmpMaskCharacter.includes(cmpValue.charAt(i))) {
+                deleteCharAt = i
+                break
+              }
+            }
+
+            if(deleteCharAt !== -1) {
+              this.cmpValue = [cmpValue.slice(0, deleteCharAt), cmpValue.slice(deleteCharAt + 1)].join('')
+              this.selectionStart = deleteCharAt
+            }
+
+            evt.preventDefault()
           } else {
             evt.preventDefault()
           }
@@ -496,11 +503,27 @@ export default {
               cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
               cnt = cmpValue.length - l
               this.selectionStart = cnt
-            }
-            else {
+            } else {
               this.selectionStart = cursorStart + cnt
             }
-            this.nextCharHint(this.selectionStart)
+            //this.nextCharHint(this.selectionStart)
+          } else if(this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart : cursorStart, cursorStart === cursorEnd ? cursorStart : cursorEnd - 1) && cursorStart === cursorEnd) {
+            let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
+            var deleteCharAt = -1
+
+            for(var i = cursorStart + 1; i < cmpValue.length; i++) {
+              if(!this.cmpMaskCharacter.includes(cmpValue.charAt(i))) {
+                deleteCharAt = i
+                break
+              }
+            }
+
+            if(deleteCharAt !== -1) {
+              this.cmpValue = [cmpValue.slice(0, deleteCharAt), cmpValue.slice(deleteCharAt + 1)].join('')
+              this.selectionStart = cursorStart
+            }
+
+            evt.preventDefault()
           } else {
             evt.preventDefault()
           }
@@ -528,7 +551,7 @@ export default {
                 this.selectionStart = cursorStart - 1 + cnt
               }
               
-              this.nextCharHint(this.selectionStart)
+              //this.nextCharHint(this.selectionStart)
             } else {
               evt.preventDefault()
             }
@@ -585,7 +608,7 @@ export default {
   watch: {
     cmpValue(value) {
       if(!value || value.length === 0) {
-        this.nextCharHint(0)
+        //this.nextCharHint(0)
       }
     }
   }
