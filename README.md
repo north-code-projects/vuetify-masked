@@ -111,7 +111,7 @@ The following options can be used for component and filter
 |deformatMask  |string, object |``null``          |yes        |no     |Mask used to deformat the masked value. If null all characters of the masked will be removed |
 |empty         |string         |``null``          |yes        |no     |Value returned for an empty text field|
 |falseCharWildcard|string      |``''``            |yes        |yes    |False characters of the provided  v-model/value will be replaced with this one. By default they will simply be deleted.|
-|formatMask    |string, object |``'##########'``  |yes        |yes    |Used to mask the given value. Meaining of characters and usable attributes for object can be found below table|
+|formatMask    |string, object |``'##########'``  |yes        |yes    |Used to mask the given value. Meaning of characters and usable attributes for object can be found below table|
 |hints         |object         ||yes|no| Hints will be displayed depending on the cursor position and according to the next possible character that can be entered. |
 |length        |number         |``null``          |yes        |no     |Max number of digits (including precision) that can be entered into the text field. Ignored for type text.|
 |locale        |string         |``'en-EN'``       |yes        |yes    |Used to determine the decimal and thousands seperator. |
