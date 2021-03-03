@@ -6,6 +6,7 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
   value = clearValue(value, charsToClear)
   let result = ""
   let count = 0
+  let maskSuffix = ''
   if(value) {
     let arrayValue = value.toString().split("")
     for(var i = 0; i < mask.length; i++) {
@@ -26,9 +27,18 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
 
           result += transformChar(c, m)
         }
+      } else {
+        if(mask[i].partOfMask) {
+          maskSuffix += mask[i].mask
+        } else {
+          maskSuffix = ''
+          break
+        }
       }
     }
   }
+
+  result += maskSuffix
 
   return result
 }
