@@ -149,9 +149,11 @@ export default {
           this.maxLengthReached = false
         }
 
-        if(this.$refs.textfield) {
-          this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart)
-        }
+        this.$nextTick(() => {
+          if(this.$refs.textfield) {
+            this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart)
+          }
+        })
 
         this.$emit("input", this.deformat(newValue))
       }

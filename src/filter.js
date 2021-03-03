@@ -30,7 +30,7 @@ function formatMask () {
           for(var i = 0; i < stringMask.length; i++) {
             let c = stringMask[i]
 
-            let o = prepareMask(c, {}, cmpMaskCharacter()) //TODO use a function that removes
+            let o = prepareMask(c, {}, cmpMaskCharacter())
 
             m.push(o)
           }
@@ -84,7 +84,7 @@ export default (value, options) => {
   let result = globalOptions.empty
 
   if(typeIsText()) {
-    result = formatText(value, formatMask(), [], '')
+    result = formatText(value, formatMask(), cmpMaskCharacter(), '')
   } else if (typeIsFloat()) {
     result = formatFloat(value, globalOptions.locale, cmpPrecision())
   }
