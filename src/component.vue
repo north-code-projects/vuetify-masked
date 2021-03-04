@@ -123,8 +123,8 @@ export default {
     cmpValue: {
       get() {
         let formattedValue = this.format(this.value)
-
-        if(formattedValue && formattedValue.length >= this.maxLength) {
+        
+        if(formattedValue && this.maxLength && formattedValue.length >= this.maxLength) {
           this.maxLengthReached = true
         } else {
           this.maxLengthReached = false
@@ -133,7 +133,7 @@ export default {
         return formattedValue
       },
       set(newValue) {
-        if(newValue.length >= this.maxLength) {
+        if(this.maxLength && newValue.length >= this.maxLength) {
           this.maxLengthReached = true
         } else {
           this.maxLengthReached = false
