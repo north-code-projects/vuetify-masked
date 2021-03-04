@@ -1,36 +1,24 @@
 import { formatFloat, formatText } from "./utils/formatter";
 import { prepareMask } from './utils/preparator'
 
-let globalOptions = {
-  type: 'text',
-  formatMask: '##########',
-  deformatMask: null,
-  maskCharacter: ['-', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?'],
-  empty: null,
-  precision: 2,
-  locale: 'en-EN',
-  suffix: null,
-  falseCharWildcard: ''
-}
-
-function formatMask () {
+function formatMask (options) {
   var m = []
-      if(typeIsText) {
-        if(Array.isArray(globalOptions.formatMask)) {
-          for(var i = 0; i < globalOptions.formatMask.length; i++) {
-            let c = globalOptions.formatMask[i]
+      if(typeIsText(options)) {
+        if(Array.isArray(options.formatMask)) {
+          for(var i = 0; i < options.formatMask.length; i++) {
+            let c = options.formatMask[i]
             
-            let o = prepareMask(c, {}, cmpMaskCharacter())
+            let o = prepareMask(c, {}, cmpMaskCharacter(options))
             
             m.push(o)
           }
         } else {
-          let stringMask = globalOptions.formatMask.split('')
+          let stringMask = options.formatMask.split('')
           
           for(var i = 0; i < stringMask.length; i++) {
             let c = stringMask[i]
 
-            let o = prepareMask(c, {}, cmpMaskCharacter())
+            let o = prepareMask(c, {}, cmpMaskCharacter(options))
 
             m.push(o)
           }
@@ -39,55 +27,67 @@ function formatMask () {
       return m
 }
 
-function typeIsText() {
-  if(globalOptions.type === 'text') {
+function typeIsText(options) {
+  if(options.type === 'text') {
     return true
   } else {
     return false
   }
 }
 
-function typeIsFloat() {
-  if(['percentage', 'currency', 'integer', 'float'].indexOf(globalOptions.type) !== -1) {
+function typeIsFloat(options) {
+  if(['percentage', 'currency', 'integer', 'float'].indexOf(options.type) !== -1) {
     return true
   } else {
     return false
   }
 }
 
-function cmpMaskCharacter() {
-  let v = globalOptions.maskCharacter.filter(char => char != globalOptions.falseCharWildcard)
+function cmpMaskCharacter(options) {
+  let v = options.maskCharacter.filter(char => char != options.falseCharWildcard)
   return v
 }
 
-function cmpPrecision() {
-  if(globalOptions.type === 'integer') {
+function cmpPrecision(options) {
+  if(options.type === 'integer') {
     return 0
   } else {
-    return globalOptions.precision
+    return options.precision
   } 
 }
 
-function cmpSuffix() {
-  if(globalOptions.type === 'percentage') {
-    return globalOptions.suffix || '%'
-  } else if(globalOptions.type === 'currency') {
-    return globalOptions.suffix || 'USD'
+function cmpSuffix(options) {
+  if(options.type === 'percentage') {
+    return options.suffix || '%'
+  } else if(options.type === 'currency') {
+    return options.suffix || 'USD'
   } else {
-    return globalOptions.suffix || ''
+    return options.suffix || ''
   }
 }
 
 export default (value, options) => {
-  globalOptions = Object.assign(globalOptions, options)
-
-  let result = globalOptions.empty
-
-  if(typeIsText()) {
-    result = formatText(value, formatMask(), cmpMaskCharacter(), '')
-  } else if (typeIsFloat()) {
-    result = formatFloat(value, globalOptions.locale, cmpPrecision())
+  let defaultOptions = {
+    type: 'text',
+    formatMask: '##########',
+    deformatMask: null,
+    maskCharacter: ['-', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?'],
+    empty: null,
+    precision: 2,
+    locale: 'en-EN',
+    suffix: null,
+    falseCharWildcard: ''
   }
 
-  return result + cmpSuffix()
+  defaultOptions = Object.assign(defaultOptions, options)
+
+  let result = defaultOptions.empty
+
+  if(typeIsText(defaultOptions)) {
+    result = formatText(value, formatMask(defaultOptions), cmpMaskCharacter(defaultOptions), '')
+  } else if (typeIsFloat(defaultOptions)) {
+    result = formatFloat(value, defaultOptions.locale, cmpPrecision(defaultOptions))
+  }
+
+  return result + cmpSuffix(defaultOptions)
 }
