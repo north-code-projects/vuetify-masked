@@ -48,7 +48,7 @@ Once installed, for a simple mask the component can be used in a template as sim
 ></v-text-field-masked>
 
 <!-- Filter -->
-{{ text | vuetifyMaskedFilter({ formatMask: "ADDD-ul/#####" }) }}
+{{ text | vuetifyMaskedFilter({ formatMask: "###A/##l/D#U" }) }}
 ```
 Resulted value for '123A56U89a' is '123A/56u/89A'.
 
