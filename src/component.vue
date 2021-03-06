@@ -18,6 +18,9 @@
     v-bind="properties"
     ref="textfield"
   >
+    <template v-for="(_, slot) of $slots" v-slot:[slot]>
+      <slot :name="slot"></slot>
+    </template>
   </v-text-field>
 </template>
 
