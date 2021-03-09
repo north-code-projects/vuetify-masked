@@ -315,7 +315,7 @@ export default {
           value = this.empty
         }
       } else if (value && this.typeIsFloat) {
-        value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
+        value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter, this.type)
         if(value === '') {
           value = this.empty
         }
