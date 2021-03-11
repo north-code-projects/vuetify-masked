@@ -115,7 +115,7 @@ The following options can be used for component and filter
 |hints         |object         ||yes|no| Hints will be displayed depending on the cursor position and according to the next possible character that can be entered. |
 |length        |number         |``null``          |yes        |no     |Max number of digits (including precision) that can be entered into the text field. Ignored for type text.|
 |locale        |string         |``'en-EN'``       |yes        |yes    |Used to determine the decimal and thousands seperator. |
-|maskCharacter |array          |``['-', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']``|yes|yes|Characters of the mask. Can not be used as input character for the text field. Used for both, formatMask and deformatMask.|
+|maskCharacter |array          |``['-', '+', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']``|yes|yes|Characters of the mask. Can not be used as input character for the text field. Used for both, formatMask and deformatMask.|
 |precision     |number         |``2``             |yes        |yes    |Precision used for numbers. Ingored for types text and integer.|
 |properties    |object         |``null``          |yes        |no     |Properties for the v-text-field used by vuetify-masked|
 |suffix        |string         |``null`` (text, integer, float)<br/>``'%'`` (percentage)<br/>``'USD'``(currency)|yes|yes||

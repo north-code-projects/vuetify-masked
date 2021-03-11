@@ -3,8 +3,8 @@ import { transformChar } from './transformer'
 import { charIsValid } from './validator'
 
 export function formatText(value, mask, charsToClear, falseCharWildcard) {
+  let result = ''
   value = clearValue(value, charsToClear)
-  let result = ""
   let count = 0
   let maskSuffix = ''
   if(value) {
@@ -46,8 +46,10 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
 export function formatFloat(value, locale, precision) {
   let result = ""
 
-  if(value) {
+  if(value && value !== '-' && value !== '+') {
     result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
+  } else if (value === '-' || value === '+') {
+    result = value
   }
 
   return result

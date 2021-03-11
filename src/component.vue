@@ -85,7 +85,7 @@ export default {
     maskCharacter: {
       type: Array,
       default: function() {
-        return ['-', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']
+        return ['-', '+', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']
       }
     },
     empty: {
@@ -136,7 +136,7 @@ export default {
         return formattedValue
       },
       set(newValue) {
-        if(this.maxLength && newValue.length >= this.maxLength) {
+        if(this.maxLength && newValue && newValue.length >= this.maxLength) {
           this.maxLengthReached = true
         } else {
           this.maxLengthReached = false
@@ -326,12 +326,13 @@ export default {
     },
     keyPress: function(evt) {
       let preventedDefault = false
-      if(this.cmpMaskCharacter.includes(evt.key)) {
+      if(this.typeIsText && this.cmpMaskCharacter.includes(evt.key)) {
         preventedDefault = true
         evt.preventDefault()
       }
 
       let cursor = this.$refs.textfield.$refs.input.selectionStart
+      let cursorEnd = this.$refs.textfield.$refs.input.selectionEnd
       let cnt = 0;
 
       if(this.typeIsText) {
@@ -347,22 +348,39 @@ export default {
             cnt++
           }
         }
+        this.selectionStart = cursor + (preventedDefault ? 0 : cnt + 1)
       } else if (this.typeIsFloat) {
-        if(isNaN(parseFloat(evt.key))) {
-          preventedDefault = true
+        if(this.cmpValue && deformatFloat(this.cmpValue, this.cmpPrecision, this.cmpMaskCharacter) == 0 && evt.key === '0') {
           evt.preventDefault()
+          let cmpValueSplit = this.cmpValue.split('')
+          for(var i = cursorEnd; i < cmpValueSplit.length; i++) {
+            if(this.maskCharacter.includes(cmpValueSplit[i])) {
+              cnt++
+            } else {
+              break
+            }
+          }
+          this.$refs.textfield.$refs.input.selectionStart = cursorEnd + cnt + 1
         } else {
-          let value = this.cmpValue != null ? this.cmpValue.toString() : ''
-          let l = value.length
-          value = [value.slice(0, cursor), evt.key, value.slice(cursor)].join('')
-          value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
-          value = formatFloat(value, this.locale, this.cmpPrecision)
-          cnt = value.length - l - 1
+          let firstChar = this.cmpValue ? this.cmpValue.toString().charAt(0) : ''
+          if(isNaN(parseFloat(evt.key)) && !(cursor === 0 && (evt.key === '-' || evt.key === '+'))) {
+            preventedDefault = true
+            evt.preventDefault()
+          } else if ((cursor === 0 && (evt.key === '-' || evt.key === '+')) && this.cmpValue && isNaN(parseFloat(firstChar) && evt.key === firstChar)) {
+            preventedDefault = true
+            evt.preventDefault()
+            this.$refs.textfield.$refs.input.selectionStart = 1
+          } else {
+            let value = this.cmpValue != null ? this.cmpValue.toString() : ''
+            let l = value.length
+            value = [value.slice(0, cursor), evt.key, value.slice(cursorEnd)].join('')
+            value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
+            value = formatFloat(value, this.locale, this.cmpPrecision)
+            cnt = value.length - l - 1
+          }
+          this.selectionStart = cursorEnd + (preventedDefault ? cnt : cnt + 1)
         }
       }
-
-      this.selectionStart = cursor + (preventedDefault ? 0 : cnt + 1)
-      //this.nextCharHint(cursor + (preventedDefault ? 0 : cnt + 1))
       
       this.$emit('keypress')
     },
@@ -376,6 +394,7 @@ export default {
       let paste = ''
       let pastePos = 0
       let cnt = 0
+      let prefix = cursor === 0 && (evt.clipboardData.getData('text').charAt(0) === '-' || evt.clipboardData.getData('text').charAt(0) === '+') ? evt.clipboardData.getData('text').charAt(0) : ''
 
       if(this.typeIsText) {
         for(var i = cursor; i < this.cmpFormatMask.length; i++) {
@@ -394,7 +413,10 @@ export default {
             cnt++
           }
         }
+        this.selectionStart = cursor + cnt + paste.length
       } else if(this.typeIsFloat) {
+        paste = prefix
+        
         originalPaste = originalPaste.split('')
         for(var i = 0; i < originalPaste.length; i++) {
           if(!isNaN(parseFloat(originalPaste[i]))) {
@@ -406,13 +428,13 @@ export default {
         let l = value.length
         value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
         value = formatFloat(value, this.locale, this.cmpPrecision)
-        cnt = (value.length - l - paste.length) + cursor > 0 ? (value.length - l - paste.length) : 0
+        cnt = (value.length - l)
+        this.selectionStart = cursor + cnt + paste.length
       }
       
       let cmpValueCopy = this.cmpValue != null ? this.cmpValue.toString() : ''
       this.cmpValue = [cmpValueCopy.slice(0, cursor), paste, cmpValueCopy.slice(cursorEnd)].join('')
-      this.selectionStart = cursor + cnt + paste.length
-      //this.nextCharHint(cursor + cnt + paste.length)
+      
       this.$emit('paste')
     },
     keyDown: function(evt) {
@@ -424,10 +446,10 @@ export default {
         case 8:
           //backspace
           cnt = 0
-
           if (!this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart - 1 : cursorStart, cursorStart === cursorEnd ? cursorStart - 1 : cursorEnd - 1)) {
             if(this.typeIsFloat) {
               let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
+              let originalValue = cmpValue
               let start = cursorStart === cursorEnd ? cursorStart - 1 : cursorStart
               let end = cursorStart === cursorEnd ? cursorStart : cursorEnd
               let l = cmpValue.length - end
@@ -435,7 +457,11 @@ export default {
               cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
               cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
               cnt = cmpValue.length - l
-              this.selectionStart = cnt
+              if(originalValue !== cmpValue) {
+                this.selectionStart = cnt <= 0 ? 0 : cnt
+              } else {
+                evt.preventDefault()
+              }
             }
             else if(cursorStart !== cursorEnd) {
               this.selectionStart = cursorStart + cnt
@@ -499,13 +525,18 @@ export default {
           if (!this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart : cursorStart, cursorStart === cursorEnd ? cursorStart : cursorEnd - 1)) {
             if(this.typeIsFloat) {
               let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
+              let originalValue = cmpValue
               let end = cursorStart === cursorEnd ? cursorStart + 1 : cursorEnd
               let l = cmpValue.length - end
               cmpValue = [cmpValue.slice(0, cursorStart), cmpValue.slice(end)].join('')
               cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
               cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
               cnt = cmpValue.length - l
-              this.selectionStart = cnt
+              if(originalValue !== cmpValue) {
+                this.selectionStart = cnt <= 0 ? 0 : cnt
+              } else {
+                evt.preventDefault()
+              }
             } else {
               this.selectionStart = cursorStart + cnt
             }
@@ -595,8 +626,10 @@ export default {
     },
     onlyMaskedCharGotDeleted(start, end) {
       let res = true
-
-      if(this.cmpValue) {
+      if(this.cmpValue && this.typeIsFloat && start === 0) {
+        res = false
+      }
+      else if(this.cmpValue) {
         for(var i = start; i <= end; i++) {
           if(!this.cmpMaskCharacter.includes(this.cmpValue.charAt(i))) {
             res = false
