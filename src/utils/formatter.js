@@ -7,7 +7,7 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
   value = clearValue(value, charsToClear)
   let count = 0
   let maskSuffix = ''
-  if(value != null) {
+  if(value !== null && value !== '') {
     let arrayValue = value.toString().split("")
     for(var i = 0; i < mask.length; i++) {
       if(i < arrayValue.length + count) {
@@ -46,7 +46,7 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
 export function formatFloat(value, locale, precision) {
   let result = ""
 
-  if(value != null && value !== '-' && value !== '+') {
+  if(value !== null && value !== '' && value !== '-' && value !== '+') {
     result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
   } else if (value === '-' || value === '+') {
     result = value

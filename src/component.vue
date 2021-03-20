@@ -290,9 +290,9 @@ export default {
   },
   methods: {
     format: function(value) {
-      if(value != null && this.typeIsText) {
+      if(value !== null && value !== '' && this.typeIsText) {
         value = formatText(value, this.cmpFormatMask, this.cmpMaskCharacter, this.falseCharWildcard)
-      } else if (value != null && this.typeIsFloat) {
+      } else if (value !== null && value !== '' && this.typeIsFloat) {
         value = formatFloat(value, this.locale, this.cmpPrecision)
       } else {
         value = this.empty
