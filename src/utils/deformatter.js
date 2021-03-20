@@ -4,7 +4,7 @@ export function deformatFloat(value, precision, charsToClear, type) {
   let sign = value.charAt(0) === '-' || value.charAt(0) === '+' ? value.charAt(0) : ''
   let result = ''
 
-  if(value) {
+  if(value != null) {
     result += clearValue(value, charsToClear)
     if(type !== 'integer' && value !== '-' && value !== '+') {
       result = result.padStart(precision + 1, '0')
