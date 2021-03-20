@@ -1,6 +1,6 @@
 export function clearValue(value, charsToClear) {
   let result = ''
-   if(value !== null && value !== '') {
+   if(value != null && value !== '') {
     let arrayValue = value.toString().split('')
     for(var i = 0; i < arrayValue.length; i++) {
       if(!charsToClear.includes(arrayValue[i])) {
