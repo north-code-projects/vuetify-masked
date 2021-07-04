@@ -242,7 +242,7 @@ export default {
         return this.cmpFormatMask.length
       } else if (this.typeIsFloat && this.length) {
         let value = '1'.repeat(this.length)
-        value = formatFloat(value, this.locale, this.cmpPrecision)
+        value = formatFloat(value, this.locale, this.cmpPrecision, this.falseCharWildcard)
         return value.length
       } else {
         return null
@@ -300,7 +300,7 @@ export default {
       if (value != null && value !== '' && this.typeIsText) {
         value = formatText(value, this.cmpFormatMask, this.cmpMaskCharacter, this.falseCharWildcard)
       } else if (value != null && value !== '' && this.typeIsFloat) {
-        value = formatFloat(value, this.locale, this.cmpPrecision)
+        value = formatFloat(value, this.locale, this.cmpPrecision, this.falseCharWildcard)
       } else {
         value = this.empty
       }
@@ -382,7 +382,7 @@ export default {
             let l = value.length
             value = [value.slice(0, cursor), evt.key, value.slice(cursorEnd)].join('')
             value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
-            value = formatFloat(value, this.locale, this.cmpPrecision)
+            value = formatFloat(value, this.locale, this.cmpPrecision, this.falseCharWildcard)
             cnt = value.length - l - 1
           }
           this.selectionStart = cursorEnd + (preventedDefault ? cnt : cnt + 1)
@@ -434,7 +434,7 @@ export default {
         value = [value.slice(0, cursor), paste, value.slice(cursorEnd)].join('')
         let l = value.length
         value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
-        value = formatFloat(value, this.locale, this.cmpPrecision)
+        value = formatFloat(value, this.locale, this.cmpPrecision, this.falseCharWildcard)
         cnt = value.length - l
         this.selectionStart = cursor + cnt + paste.length
       }
@@ -464,7 +464,7 @@ export default {
               let l = cmpValue.length - end
               cmpValue = [cmpValue.slice(0, start), cmpValue.slice(end)].join('')
               cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
-              cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
+              cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision, this.falseCharWildcard)
               cnt = cmpValue.length - l
               if (originalValue !== cmpValue) {
                 this.selectionStart = cnt <= 0 ? 0 : cnt
@@ -539,7 +539,7 @@ export default {
               let l = cmpValue.length - end
               cmpValue = [cmpValue.slice(0, cursorStart), cmpValue.slice(end)].join('')
               cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
-              cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
+              cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision, this.falseCharWildcard)
               cnt = cmpValue.length - l
               if (originalValue !== cmpValue) {
                 this.selectionStart = cnt <= 0 ? 0 : cnt
@@ -584,7 +584,7 @@ export default {
                 let l = cmpValue.length - end
                 cmpValue = [cmpValue.slice(0, start), cmpValue.slice(end)].join('')
                 cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
-                cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
+                cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision, this.falseCharWildcard)
                 cnt = cmpValue.length - l
                 this.selectionStart = cnt
               }

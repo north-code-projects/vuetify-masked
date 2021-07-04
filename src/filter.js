@@ -86,7 +86,7 @@ export default (value, options) => {
   if (typeIsText(defaultOptions)) {
     result = formatText(value, formatMask(defaultOptions), cmpMaskCharacter(defaultOptions), '')
   } else if (typeIsFloat(defaultOptions)) {
-    result = formatFloat(value, defaultOptions.locale, cmpPrecision(defaultOptions))
+    result = formatFloat(value, defaultOptions.locale, cmpPrecision(defaultOptions), defaultOptions.empty, true, false)
   }
 
   return result + cmpSuffix(defaultOptions)
