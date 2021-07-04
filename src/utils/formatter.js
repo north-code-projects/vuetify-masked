@@ -43,12 +43,13 @@ export function formatText (value, mask, charsToClear, falseCharWildcard) {
   return result
 }
 
-export function formatFloat (value, locale, precision) {
+export function formatFloat (value, locale, precision, nanWildcard, checkIfEmpty = false, checkIfNotEmpty = false) {
   let result = ''
-  
-  if (value != null && value !== '' && value !== '-' && value !== '+' && parseFloat(value)) result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
+
+  if (value != null && value !== '' && value !== '-' && value !== '+' && !isNaN(parseFloat(value))) result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
   else if (value === '-' || value === '+') result = value
-  else result = '.'
+  else if (value != null && value !== '' && isNaN(parseFloat(value)) && nanWildcard != null && checkIfNotEmpty) result = nanWildcard
+  else if ((value == null || value == '') && nanWildcard != null && checkIfEmpty) result = nanWildcard
 
   return result
 }
