@@ -45,11 +45,10 @@ export function formatText (value, mask, charsToClear, falseCharWildcard) {
 
 export function formatFloat (value, locale, precision) {
   let result = ''
-  if (value != null && value !== '' && value !== '-' && value !== '+') {
-    result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
-  } else if (value === '-' || value === '+') {
-    result = value
-  }
+  
+  if (value != null && value !== '' && value !== '-' && value !== '+' && parseFloat(value)) result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
+  else if (value === '-' || value === '+') result = value
+  else result = '.'
 
   return result
 }
