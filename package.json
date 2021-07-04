@@ -5,7 +5,14 @@
   "author": "Kim Mannstedt <k.mannstedt+dev@gmail.com>",
   "license": "MIT",
   "keywords": [
-    "vue", "vuetify", "mask", "masked", "filter", "textfield", "v-text-field", "v-text-field-masked"
+    "vue",
+    "vuetify",
+    "mask",
+    "masked",
+    "filter",
+    "textfield",
+    "v-text-field",
+    "v-text-field-masked"
   ],
   "repository": {
     "type": "git",
@@ -13,5 +20,11 @@
   },
   "homepage": "https://github.com/north-code-projects/vuetify-masked#readme",
   "bugs": "https://github.com/north-code-projects/vuetify-masked/issues",
-  "main": "src/index.js"
+  "main": "src/index.js",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.30.0",
+    "eslint-plugin-vue": "^7.12.1",
+    "eslint-plugin-vuetify": "^1.0.1"
+  }
 }

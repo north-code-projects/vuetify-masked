@@ -1,9 +1,9 @@
-export function transformChar(c, mask) {
-  if(mask.toUpperCase) {
+export function transformChar (c, mask) {
+  if (mask.toUpperCase) {
     c = c.toUpperCase()
   }
 
-  if(mask.toLowerCase) {
+  if (mask.toLowerCase) {
     c = c.toLowerCase()
   }
 

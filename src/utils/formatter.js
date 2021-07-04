@@ -2,16 +2,16 @@ import { clearValue } from './preparator'
 import { transformChar } from './transformer'
 import { charIsValid } from './validator'
 
-export function formatText(value, mask, charsToClear, falseCharWildcard) {
+export function formatText (value, mask, charsToClear, falseCharWildcard) {
   let result = ''
   value = clearValue(value, charsToClear)
   let count = 0
   let maskSuffix = ''
-  if(value != null && value !== '') {
-    let arrayValue = value.toString().split("")
-    for(var i = 0; i < mask.length; i++) {
-      if(i < arrayValue.length + count) {
-        if(mask[i].partOfMask) {
+  if (value != null && value !== '') {
+    let arrayValue = value.toString().split('')
+    for (var i = 0; i < mask.length; i++) {
+      if (i < arrayValue.length + count) {
+        if (mask[i].partOfMask) {
           result += mask[i].mask
           count++
         } else {
@@ -19,7 +19,7 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
 
           let m = Object.assign({}, mask[i])
 
-          if(!charIsValid(c, m, true)) {
+          if (!charIsValid(c, m, true)) {
             c = falseCharWildcard
             count -= 1 - falseCharWildcard.length
             i -= 1 - falseCharWildcard.length
@@ -28,7 +28,7 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
           result += transformChar(c, m)
         }
       } else {
-        if(mask[i].partOfMask) {
+        if (mask[i].partOfMask) {
           maskSuffix += mask[i].mask
         } else {
           maskSuffix = ''
@@ -43,9 +43,9 @@ export function formatText(value, mask, charsToClear, falseCharWildcard) {
   return result
 }
 
-export function formatFloat(value, locale, precision) {
-  let result = ""
-  if(value != null && value !== '' && value !== '-' && value !== '+') {
+export function formatFloat (value, locale, precision) {
+  let result = ''
+  if (value != null && value !== '' && value !== '-' && value !== '+') {
     result = parseFloat(value).toLocaleString(locale, {minimumFractionDigits: precision, maximumFractionDigits: precision})
   } else if (value === '-' || value === '+') {
     result = value

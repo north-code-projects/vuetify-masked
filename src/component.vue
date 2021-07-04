@@ -1,25 +1,28 @@
 <template>
   <v-text-field
+    ref="textfield"
     v-model="cmpValue"
-    v-on:keypress="keyPress"
-    v-on:paste="paste"
-    v-on:keydown="keyDown"
-    v-on:keyup="$emit('keyup')"
-    v-on:blur="blur"
-    v-on:change="$emit('change')"
-    v-on:click="$emit('click')"
-    v-on:focus="$emit('focus')"
-    v-on:mousedown="$emit('mousedown')"
-    v-on:mouseup="mouseUp"
     :maxlength="maxLength"
     :label="label"
     :hint="cmpHint"
     :suffix="cmpSuffix"
     v-bind="properties"
-    ref="textfield"
+    @keypress="keyPress"
+    @paste="paste"
+    @keydown="keyDown"
+    @keyup="$emit('keyup')"
+    @blur="blur"
+    @change="$emit('change')"
+    @click="$emit('click')"
+    @focus="$emit('focus')"
+    @mousedown="$emit('mousedown')"
+    @mouseup="mouseUp"
   >
-    <template v-for="(_, slot) of $slots" v-slot:[slot]>
-      <slot :name="slot"></slot>
+    <template
+      v-for="(_, slot) of $slots"
+      #[slot]
+    >
+      <slot :name="slot" />
     </template>
   </v-text-field>
 </template>
@@ -32,26 +35,10 @@ import { transformChar } from './utils/transformer'
 import { charIsValid } from './utils/validator'
 
 export default {
-  name: 'v-text-field-masked',
-  data: () => (
-    {
-      selectionStart: null,
-      hint: '',
-      maxLengthReached: false,
-      defaultHints: {
-        digit: 'The next char is a digit',
-        alphabetic: 'The next char is alphabetic',
-        lowerCase: 'The next char is lower case',
-        upperCase: 'The next char is upper case',
-        alphanumeric: 'The next char is alphanumeric',
-        numeric: null,
-        maxLength: 'Max number of characters reached'
-      }
-    }
-  ),
+  name: 'VTextFieldMasked',
   model: {
-    prop: "value",
-    event: "input"
+    prop: 'value',
+    event: 'input'
   },
   props: {
     value: {
@@ -61,17 +48,17 @@ export default {
     type: {
       type: String,
       default: 'text',
-      validator: function(value) {
+      validator: function (value) {
         return ['text', 'percentage', 'currency', 'integer', 'float'].indexOf(value) !== -1
       }
     },
     label: {
       type: String,
-      default: ""
+      default: ''
     },
     properties: {
       type: Object,
-      default: function() {
+      default: function () {
         return {}
       }
     },
@@ -80,11 +67,12 @@ export default {
       default: '##########'
     },
     deformatMask: {
-      type: [String, Array]
+      type: [String, Array],
+      default: ''
     },
     maskCharacter: {
       type: Array,
-      default: function() {
+      default: function () {
         return ['-', '+', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']
       }
     },
@@ -110,62 +98,72 @@ export default {
     },
     hints: {
       type: Object,
-      default: function() {
+      default: function () {
         return {}
       }
     },
     falseCharWildcard: {
       type: String,
       default: '',
-      validator: function(value) {
+      validator: function (value) {
         return value.length <= 1
       }
     }
   },
+  data: () => (
+    {
+      selectionStart: null,
+      hint: '',
+      maxLengthReached: false,
+      defaultHints: {
+        digit: 'The next char is a digit',
+        alphabetic: 'The next char is alphabetic',
+        lowerCase: 'The next char is lower case',
+        upperCase: 'The next char is upper case',
+        alphanumeric: 'The next char is alphanumeric',
+        numeric: null,
+        maxLength: 'Max number of characters reached'
+      }
+    }
+  ),
   computed: {
     cmpValue: {
-      get() {
+      get () {
         let formattedValue = this.format(this.value)
-        
-        if(formattedValue && this.maxLength && formattedValue.length >= this.maxLength) {
-          this.maxLengthReached = true
-        } else {
-          this.maxLengthReached = false
-        }
 
         return formattedValue
       },
-      set(newValue) {
-        if(this.maxLength && newValue && newValue.length >= this.maxLength) {
+      set (newValue) {
+        if (this.maxLength && newValue && newValue.length >= this.maxLength) {
           this.maxLengthReached = true
         } else {
           this.maxLengthReached = false
         }
 
         this.$nextTick(() => {
-          if(this.$refs.textfield) {
+          if (this.$refs.textfield) {
             this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart)
           }
         })
 
-        this.$emit("input", this.deformat(newValue))
+        this.$emit('input', this.deformat(newValue))
       }
     },
-    cmpHint() {
-      if (this.$options.propsData['properties'] && this.properties.hasOwnProperty('hint')) {
+    cmpHint () {
+      if (this.$options.propsData['properties'] && Object.prototype.hasOwnProperty.call(this.properties, 'hint')) {
         return this.properties.hint
       } else {
         return this.hint
       }
     },
-    cmpHints() {
+    cmpHints () {
       return Object.assign(this.defaultHints, this.hints)
     },
-    cmpFormatMask() {
+    cmpFormatMask () {
       var m = []
-      if(this.typeIsText) {
-        if(Array.isArray(this.formatMask)) {
-          for(var i = 0; i < this.formatMask.length; i++) {
+      if (this.typeIsText) {
+        if (Array.isArray(this.formatMask)) {
+          for (var i = 0; i < this.formatMask.length; i++) {
             let c = this.formatMask[i]
             
             let o = prepareMask(c, this.cmpHints, this.cmpMaskCharacter)
@@ -175,8 +173,8 @@ export default {
         } else {
           let stringMask = this.formatMask.split('')
           
-          for(var i = 0; i < stringMask.length; i++) {
-            let c = stringMask[i]
+          for (var j = 0; j < stringMask.length; j++) {
+            let c = stringMask[j]
 
             let o = prepareMask(c, this.cmpHints, this.cmpMaskCharacter)
 
@@ -186,14 +184,14 @@ export default {
       }
       return m
     },
-    cmpDeformatMask() {
+    cmpDeformatMask () {
       var m = []
-      if(this.typeIsText && !this.deformatMaskPropSet) {
-        if(Array.isArray(this.formatMask)) {
-          for(var i = 0; i < this.formatMask.length; i++) {
+      if (this.typeIsText && !this.deformatMaskPropSet) {
+        if (Array.isArray(this.formatMask)) {
+          for (var i = 0; i < this.formatMask.length; i++) {
             let c = this.formatMask[i]
 
-            if(this.cmpMaskCharacter.includes(c) || this.cmpMaskCharacter.includes(c.mask)) {
+            if (this.cmpMaskCharacter.includes(c) || this.cmpMaskCharacter.includes(c.mask)) {
               continue
             }
             
@@ -204,10 +202,10 @@ export default {
         } else {
           let stringMask = this.formatMask.split('')
           
-          for(var i = 0; i < stringMask.length; i++) {
-            let c = stringMask[i]
+          for (var j = 0; j < stringMask.length; j++) {
+            let c = stringMask[j]
 
-            if(this.cmpMaskCharacter.includes(c) || this.cmpMaskCharacter.includes(c.mask)) {
+            if (this.cmpMaskCharacter.includes(c) || this.cmpMaskCharacter.includes(c.mask)) {
               continue
             }
 
@@ -216,10 +214,10 @@ export default {
             m.push(o)
           }
         }
-      } else if(this.typeIsText) {
-        if(Array.isArray(this.deformatMask)) {
-          for(var i = 0; i < this.deformatMask.length; i++) {
-            let c = this.deformatMask[i]
+      } else if (this.typeIsText) {
+        if (Array.isArray(this.deformatMask)) {
+          for (var k = 0; k < this.deformatMask.length; k++) {
+            let c = this.deformatMask[k]
             
             let o = prepareMask(c, this.cmpHints, this.cmpMaskCharacter)
             
@@ -228,8 +226,8 @@ export default {
         } else {
           let stringMask = this.deformatMask.split('')
           
-          for(var i = 0; i < stringMask.length; i++) {
-            let c = stringMask[i]
+          for (var l = 0; l < stringMask.length; l++) {
+            let c = stringMask[l]
 
             let o = prepareMask(c, this.cmpHints, this.cmpMaskCharacter)
 
@@ -239,10 +237,10 @@ export default {
       }
       return m
     },
-    maxLength() {
-      if(this.typeIsText) {
+    maxLength () {
+      if (this.typeIsText) {
         return this.cmpFormatMask.length
-      } else if(this.typeIsFloat && this.length) {
+      } else if (this.typeIsFloat && this.length) {
         let value = '1'.repeat(this.length)
         value = formatFloat(value, this.locale, this.cmpPrecision)
         return value.length
@@ -250,47 +248,56 @@ export default {
         return null
       }
     },
-    typeIsText() {
-      if(this.type === 'text') {
+    typeIsText () {
+      if (this.type === 'text') {
         return true
       } else {
         return false
       }
     },
-    typeIsFloat() {
-      if(['percentage', 'currency', 'integer', 'float'].indexOf(this.type) !== -1) {
+    typeIsFloat () {
+      if (['percentage', 'currency', 'integer', 'float'].indexOf(this.type) !== -1) {
         return true
       } else {
         return false
       }
     },
-    cmpPrecision() {
-      if(this.type === 'integer') {
+    cmpPrecision () {
+      if (this.type === 'integer') {
         return 0
       } else {
         return this.precision
       }
     },
-    cmpSuffix() {
-      if(this.type === 'percentage') {
+    cmpSuffix () {
+      if (this.type === 'percentage') {
         return this.suffix || '%'
-      } else if(this.type === 'currency') {
+      } else if (this.type === 'currency') {
         return this.suffix || 'USD'
       } else {
         return this.suffix
       }
     },
-    deformatMaskPropSet() {
+    deformatMaskPropSet () {
       return this.$options.propsData.deformatMask ? true : false
     },
-    cmpMaskCharacter() {
+    cmpMaskCharacter () {
       let v = this.maskCharacter.filter(char => char != this.falseCharWildcard)
       return v
     }
   },
+  watch: {
+    cmpValue (formattedValue) {
+      if (formattedValue && this.maxLength && formattedValue.length >= this.maxLength) {
+        this.maxLengthReached = true
+      } else {
+        this.maxLengthReached = false
+      }
+    }
+  },
   methods: {
-    format: function(value) {
-      if(value != null && value !== '' && this.typeIsText) {
+    format: function (value) {
+      if (value != null && value !== '' && this.typeIsText) {
         value = formatText(value, this.cmpFormatMask, this.cmpMaskCharacter, this.falseCharWildcard)
       } else if (value != null && value !== '' && this.typeIsFloat) {
         value = formatFloat(value, this.locale, this.cmpPrecision)
@@ -299,7 +306,7 @@ export default {
       }
 
       this.$nextTick(() => {
-        if(this.$refs.textfield && this.selectionStart != null ) {
+        if (this.$refs.textfield && this.selectionStart != null ) {
           this.$refs.textfield.$refs.input.selectionStart = this.selectionStart
           this.$refs.textfield.$refs.input.selectionEnd = this.selectionStart
           this.selectionStart = null
@@ -308,15 +315,15 @@ export default {
 
       return value
     },
-    deformat: function(value) {
-      if(value && this.typeIsText) {
+    deformat: function (value) {
+      if (value && this.typeIsText) {
         value = formatText(value, this.cmpDeformatMask, this.cmpMaskCharacter, this.falseCharWildcard)
-        if(value === '') {
+        if (value === '') {
           value = this.empty
         }
       } else if (value && this.typeIsFloat) {
         value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter, this.type)
-        if(value === '') {
+        if (value === '') {
           value = this.empty
         }
       } else {
@@ -324,21 +331,21 @@ export default {
       }
       return value
     },
-    keyPress: function(evt) {
+    keyPress: function (evt) {
       let preventedDefault = false
-      if(this.typeIsText && this.cmpMaskCharacter.includes(evt.key)) {
+      if (this.typeIsText && this.cmpMaskCharacter.includes(evt.key)) {
         preventedDefault = true
         evt.preventDefault()
       }
 
       let cursor = this.$refs.textfield.$refs.input.selectionStart
       let cursorEnd = this.$refs.textfield.$refs.input.selectionEnd
-      let cnt = 0;
+      let cnt = 0
 
-      if(this.typeIsText) {
-        for(var i = cursor; i < this.cmpFormatMask.length; i++) {
-          if(!this.cmpFormatMask[i].partOfMask) {
-            if(!charIsValid(evt.key, this.cmpFormatMask[i], true)) {
+      if (this.typeIsText) {
+        for (var i = cursor; i < this.cmpFormatMask.length; i++) {
+          if (!this.cmpFormatMask[i].partOfMask) {
+            if (!charIsValid(evt.key, this.cmpFormatMask[i], true)) {
               preventedDefault = true
               evt.preventDefault()
             }
@@ -350,11 +357,11 @@ export default {
         }
         this.selectionStart = cursor + (preventedDefault ? 0 : cnt + 1)
       } else if (this.typeIsFloat) {
-        if(this.cmpValue && deformatFloat(this.cmpValue, this.cmpPrecision, this.cmpMaskCharacter) == 0 && evt.key === '0') {
+        if (this.cmpValue && deformatFloat(this.cmpValue, this.cmpPrecision, this.cmpMaskCharacter) == 0 && evt.key === '0') {
           evt.preventDefault()
           let cmpValueSplit = this.cmpValue.split('')
-          for(var i = cursorEnd; i < cmpValueSplit.length; i++) {
-            if(this.maskCharacter.includes(cmpValueSplit[i])) {
+          for (var j = cursorEnd; j < cmpValueSplit.length; j++) {
+            if (this.maskCharacter.includes(cmpValueSplit[j])) {
               cnt++
             } else {
               break
@@ -363,10 +370,10 @@ export default {
           this.$refs.textfield.$refs.input.selectionStart = cursorEnd + cnt + 1
         } else {
           let firstChar = this.cmpValue ? this.cmpValue.toString().charAt(0) : ''
-          if(isNaN(parseFloat(evt.key)) && !(cursor === 0 && (evt.key === '-' || evt.key === '+'))) {
+          if (isNaN(parseFloat(evt.key)) && !(cursor === 0 && (evt.key === '-' || evt.key === '+'))) {
             preventedDefault = true
             evt.preventDefault()
-          } else if ((cursor === 0 && (evt.key === '-' || evt.key === '+')) && this.cmpValue && isNaN(parseFloat(firstChar) && evt.key === firstChar)) {
+          } else if (cursor === 0 && (evt.key === '-' || evt.key === '+') && this.cmpValue && isNaN(parseFloat(firstChar) && evt.key === firstChar)) {
             preventedDefault = true
             evt.preventDefault()
             this.$refs.textfield.$refs.input.selectionStart = 1
@@ -384,7 +391,7 @@ export default {
       
       this.$emit('keypress')
     },
-    paste: function(evt) {
+    paste: function (evt) {
       evt.preventDefault()
 
       let cursor = this.$refs.textfield.$refs.input.selectionStart
@@ -396,13 +403,13 @@ export default {
       let cnt = 0
       let prefix = cursor === 0 && (evt.clipboardData.getData('text').charAt(0) === '-' || evt.clipboardData.getData('text').charAt(0) === '+') ? evt.clipboardData.getData('text').charAt(0) : ''
 
-      if(this.typeIsText) {
-        for(var i = cursor; i < this.cmpFormatMask.length; i++) {
-          if(pastePos > originalPaste.length) {
+      if (this.typeIsText) {
+        for (var i = cursor; i < this.cmpFormatMask.length; i++) {
+          if (pastePos > originalPaste.length) {
             break
           }
-          if(!this.cmpFormatMask[i].partOfMask) {
-            if(!charIsValid(originalPaste.charAt(pastePos), this.cmpFormatMask[i], true)) {
+          if (!this.cmpFormatMask[i].partOfMask) {
+            if (!charIsValid(originalPaste.charAt(pastePos), this.cmpFormatMask[i], true)) {
               i--
             } else {
               paste += transformChar(originalPaste.charAt(pastePos), this.cmpFormatMask[i])
@@ -414,13 +421,13 @@ export default {
           }
         }
         this.selectionStart = cursor + cnt + paste.length
-      } else if(this.typeIsFloat) {
+      } else if (this.typeIsFloat) {
         paste = prefix
         
         originalPaste = originalPaste.split('')
-        for(var i = 0; i < originalPaste.length; i++) {
-          if(!isNaN(parseFloat(originalPaste[i]))) {
-            paste += originalPaste[i]
+        for (var j = 0; j < originalPaste.length; j++) {
+          if (!isNaN(parseFloat(originalPaste[j]))) {
+            paste += originalPaste[j]
           }
         }
         let value = this.cmpValue != null ? this.cmpValue.toString() : ''
@@ -428,7 +435,7 @@ export default {
         let l = value.length
         value = deformatFloat(value, this.cmpPrecision, this.cmpMaskCharacter)
         value = formatFloat(value, this.locale, this.cmpPrecision)
-        cnt = (value.length - l)
+        cnt = value.length - l
         this.selectionStart = cursor + cnt + paste.length
       }
       
@@ -437,17 +444,19 @@ export default {
       
       this.$emit('paste')
     },
-    keyDown: function(evt) {
+    keyDown: function (evt) {
       let cursorStart = this.$refs.textfield.$refs.input.selectionStart
       let cursorEnd = this.$refs.textfield.$refs.input.selectionEnd
 
       let cnt = 0
+      let end = 0
+      var deleteCharAt = -1
       switch (evt.keyCode) {
         case 8:
-          //backspace
+          // backspace
           cnt = 0
           if (!this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart - 1 : cursorStart, cursorStart === cursorEnd ? cursorStart - 1 : cursorEnd - 1)) {
-            if(this.typeIsFloat) {
+            if (this.typeIsFloat) {
               let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
               let originalValue = cmpValue
               let start = cursorStart === cursorEnd ? cursorStart - 1 : cursorStart
@@ -457,31 +466,31 @@ export default {
               cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
               cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
               cnt = cmpValue.length - l
-              if(originalValue !== cmpValue) {
+              if (originalValue !== cmpValue) {
                 this.selectionStart = cnt <= 0 ? 0 : cnt
               } else {
                 evt.preventDefault()
               }
             }
-            else if(cursorStart !== cursorEnd) {
+            else if (cursorStart !== cursorEnd) {
               this.selectionStart = cursorStart + cnt
             } else {
               this.selectionStart = cursorStart - 1 + cnt
             }
             
-            //this.nextCharHint(this.selectionStart)
+            // this.nextCharHint(this.selectionStart)
           } else if (this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart - 1 : cursorStart, cursorStart === cursorEnd ? cursorStart - 1 : cursorEnd - 1) && cursorStart === cursorEnd) {
             let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
-            var deleteCharAt = -1
+            deleteCharAt = -1
 
-            for(var i = cursorStart - 1; i >= 0; i--) {
-              if(!this.cmpMaskCharacter.includes(cmpValue.charAt(i))) {
+            for (var i = cursorStart - 1; i >= 0; i--) {
+              if (!this.cmpMaskCharacter.includes(cmpValue.charAt(i))) {
                 deleteCharAt = i
                 break
               }
             }
 
-            if(deleteCharAt !== -1) {
+            if (deleteCharAt !== -1) {
               this.cmpValue = [cmpValue.slice(0, deleteCharAt), cmpValue.slice(deleteCharAt + 1)].join('')
               this.selectionStart = deleteCharAt
             }
@@ -493,37 +502,37 @@ export default {
           
           break
         case 35:
-          //End
-          let lEnd = this.cmpValue != null ? this.cmpValue.length : 0
-          this.nextCharHint(lEnd)
+          // End
+          end = this.cmpValue != null ? this.cmpValue.length : 0
+          this.nextCharHint(end)
           break
         case 36:
-          //Home (Pos1)
+          // Home (Pos1)
           this.nextCharHint(0)
           break
         case 37:
-          //left arrow
+          // left arrow
           this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart - 1)
           break
         case 38:
-          //up arrow
+          // up arrow
           this.nextCharHint(0)
           break
         case 39:
-          //right arrow
-          let lRight = this.cmpValue != null ? this.cmpValue.length : 0
-          this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart + (this.$refs.textfield.$refs.input.selectionStart < lRight ? 1 : 0))
+          // right arrow
+          end = this.cmpValue != null ? this.cmpValue.length : 0
+          this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart + (this.$refs.textfield.$refs.input.selectionStart < end ? 1 : 0))
           break
         case 40:
-          //down arrow
-          let lDown = this.cmpValue != null ? this.cmpValue.length : 0
-          this.nextCharHint(lDown)
+          // down arrow
+          end = this.cmpValue != null ? this.cmpValue.length : 0
+          this.nextCharHint(end)
           break
         case 46:
-          //delete
+          // delete
           cnt = 0
           if (!this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart : cursorStart, cursorStart === cursorEnd ? cursorStart : cursorEnd - 1)) {
-            if(this.typeIsFloat) {
+            if (this.typeIsFloat) {
               let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
               let originalValue = cmpValue
               let end = cursorStart === cursorEnd ? cursorStart + 1 : cursorEnd
@@ -532,7 +541,7 @@ export default {
               cmpValue = deformatFloat(cmpValue, this.cmpPrecision, this.cmpMaskCharacter)
               cmpValue = formatFloat(cmpValue, this.locale, this.cmpPrecision)
               cnt = cmpValue.length - l
-              if(originalValue !== cmpValue) {
+              if (originalValue !== cmpValue) {
                 this.selectionStart = cnt <= 0 ? 0 : cnt
               } else {
                 evt.preventDefault()
@@ -540,19 +549,19 @@ export default {
             } else {
               this.selectionStart = cursorStart + cnt
             }
-            //this.nextCharHint(this.selectionStart)
-          } else if(this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart : cursorStart, cursorStart === cursorEnd ? cursorStart : cursorEnd - 1) && cursorStart === cursorEnd) {
+            // this.nextCharHint(this.selectionStart)
+          } else if (this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart : cursorStart, cursorStart === cursorEnd ? cursorStart : cursorEnd - 1) && cursorStart === cursorEnd) {
             let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
-            var deleteCharAt = -1
+            deleteCharAt = -1
 
-            for(var i = cursorStart + 1; i < cmpValue.length; i++) {
-              if(!this.cmpMaskCharacter.includes(cmpValue.charAt(i))) {
-                deleteCharAt = i
+            for (var j = cursorStart + 1; j < cmpValue.length; j++) {
+              if (!this.cmpMaskCharacter.includes(cmpValue.charAt(j))) {
+                deleteCharAt = j
                 break
               }
             }
 
-            if(deleteCharAt !== -1) {
+            if (deleteCharAt !== -1) {
               this.cmpValue = [cmpValue.slice(0, deleteCharAt), cmpValue.slice(deleteCharAt + 1)].join('')
               this.selectionStart = cursorStart
             }
@@ -563,12 +572,12 @@ export default {
           }
           break
         case 88:
-          //check for ctrl+x
-          if(evt.ctrlKey && cursorStart !== cursorEnd) {
+          // check for ctrl+x
+          if (evt.ctrlKey && cursorStart !== cursorEnd) {
             cnt = 0
 
             if (!this.onlyMaskedCharGotDeleted(cursorStart === cursorEnd ? cursorStart - 1 : cursorStart, cursorStart === cursorEnd ? cursorStart - 1 : cursorEnd - 1)) {
-              if(this.typeIsFloat) {
+              if (this.typeIsFloat) {
                 let cmpValue = this.cmpValue != null ? this.cmpValue.toString() : ''
                 let start = cursorStart === cursorEnd ? cursorStart - 1 : cursorStart
                 let end = cursorStart === cursorEnd ? cursorStart : cursorEnd
@@ -579,13 +588,13 @@ export default {
                 cnt = cmpValue.length - l
                 this.selectionStart = cnt
               }
-              else if(cursorStart !== cursorEnd) {
+              else if (cursorStart !== cursorEnd) {
                 this.selectionStart = cursorStart + cnt
               } else {
                 this.selectionStart = cursorStart - 1 + cnt
               }
               
-              //this.nextCharHint(this.selectionStart)
+              // this.nextCharHint(this.selectionStart)
             } else {
               evt.preventDefault()
             }
@@ -597,41 +606,41 @@ export default {
       }
       this.$emit('keydown')
     },
-    mouseUp: function(evt) {
+    mouseUp: function () {
       this.nextCharHint(this.$refs.textfield.$refs.input.selectionStart)
       this.$emit('mouseup')
     },
-    blur: function(evt) {
+    blur: function () {
       this.hint = ''
       this.$emit('blur')
     },
-    nextCharHint(position) {
+    nextCharHint (position) {
       this.hint = ''
-      if(this.maxLengthReached) {
+      if (this.maxLengthReached) {
         this.hint = this.cmpHints.maxLength
-      } else if(this.typeIsText) {
-        if(position < 0) {
+      } else if (this.typeIsText) {
+        if (position < 0) {
           position = 0
         }
 
-        for(var i = position; i < this.cmpFormatMask.length; i++) {
-          if(!this.cmpFormatMask[i].partOfMask) {
+        for (var i = position; i < this.cmpFormatMask.length; i++) {
+          if (!this.cmpFormatMask[i].partOfMask) {
             this.hint = this.cmpFormatMask[i].hint
             break
           }
         }
-      } else if(this.typeIsFloat) {
+      } else if (this.typeIsFloat) {
         this.hint = this.cmpHints.numeric
       }
     },
-    onlyMaskedCharGotDeleted(start, end) {
+    onlyMaskedCharGotDeleted (start, end) {
       let res = true
-      if(this.cmpValue && this.typeIsFloat && start === 0) {
+      if (this.cmpValue && this.typeIsFloat && start === 0) {
         res = false
       }
-      else if(this.cmpValue) {
-        for(var i = start; i <= end; i++) {
-          if(!this.cmpMaskCharacter.includes(this.cmpValue.charAt(i))) {
+      else if (this.cmpValue) {
+        for (var i = start; i <= end; i++) {
+          if (!this.cmpMaskCharacter.includes(this.cmpValue.charAt(i))) {
             res = false
             break
           }
@@ -639,13 +648,6 @@ export default {
       }
 
       return res
-    }
-  },
-  watch: {
-    cmpValue(value) {
-      if(!value || value.length === 0) {
-        //this.nextCharHint(0)
-      }
     }
   }
 }
