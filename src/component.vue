@@ -102,6 +102,10 @@ export default {
         return {}
       }
     },
+    showHints: {
+      type: Boolean,
+      default: false 
+    },
     falseCharWildcard: {
       type: String,
       default: '',
@@ -616,21 +620,23 @@ export default {
     },
     nextCharHint (position) {
       this.hint = ''
-      if (this.maxLengthReached) {
-        this.hint = this.cmpHints.maxLength
-      } else if (this.typeIsText) {
-        if (position < 0) {
-          position = 0
-        }
-
-        for (var i = position; i < this.cmpFormatMask.length; i++) {
-          if (!this.cmpFormatMask[i].partOfMask) {
-            this.hint = this.cmpFormatMask[i].hint
-            break
+      if (this.showHints) {
+        if (this.maxLengthReached) {
+          this.hint = this.cmpHints.maxLength
+        } else if (this.typeIsText) {
+          if (position < 0) {
+            position = 0
           }
+
+          for (var i = position; i < this.cmpFormatMask.length; i++) {
+            if (!this.cmpFormatMask[i].partOfMask) {
+              this.hint = this.cmpFormatMask[i].hint
+              break
+            }
+          }
+        } else if (this.typeIsFloat) {
+          this.hint = this.cmpHints.numeric
         }
-      } else if (this.typeIsFloat) {
-        this.hint = this.cmpHints.numeric
       }
     },
     onlyMaskedCharGotDeleted (start, end) {
