@@ -45,12 +45,13 @@ Once installed, for a simple mask the component can be used in a template as sim
   v-model="text"
   formatMask="###A/##l/D#U"
   label="default type (text)"
+  :showHints="true"
 ></v-text-field-masked>
 
 <!-- Filter -->
 {{ text | vuetifyMaskedFilter({ formatMask: "###A/##l/D#U" }) }}
 ```
-Resulted value for '123A56U89a' is '123A/56u/89A'.
+Resulted value for '123A56U89a' is '123A/56u/89A'. In the text field default hints will be shown.
 
 ### Type 'float'
 ```javascript
@@ -118,6 +119,7 @@ The following options can be used for component and filter
 |maskCharacter |array          |``['-', '+', '.', ',', ' ', '/', '(', ')', '_', '\\', '\'', '~', '*', '&', '"', '?']``|yes|yes|Characters of the mask. Can not be used as input character for the text field. Used for both, formatMask and deformatMask.|
 |precision     |number         |``2``             |yes        |yes    |Precision used for numbers. Ingored for types text and integer.|
 |properties    |object         |``null``          |yes        |no     |Properties for the v-text-field used by vuetify-masked|
+|showHints     |boolean        |false             |yes        |no     |If true, show hints defined by hints
 |suffix        |string         |``null`` (text, integer, float)<br/>``'%'`` (percentage)<br/>``'USD'``(currency)|yes|yes||
 |type          |string         |``'text'``        |yes        |yes    |5 types exist: text, float, integer, currency, and percentage |
 |value         |string, number |``null``          |yes        |yes    |Mapped to the v-model of the component|            |
